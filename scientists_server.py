@@ -56,7 +56,7 @@ async def create_scientist(
         "avatar_url": avatar_url
     }
 
-    result = supabase.table("scientists").insert(data).execute()
+    result = supabase.table("scientists2").insert(data).execute()
 
     return result.data
 
@@ -66,7 +66,7 @@ async def create_scientist(
 # -----------------------------
 @app.get("/scientists")
 def get_scientists():
-    result = supabase.table("scientists").select("*").execute()
+    result = supabase.table("scientists2").select("*").execute()
     return result.data
 
 
@@ -75,7 +75,7 @@ def get_scientists():
 # -----------------------------
 @app.get("/scientists/{scientist_id}")
 def get_scientist(scientist_id: str):
-    result = supabase.table("scientists") \
+    result = supabase.table("scientists2") \
         .select("*") \
         .eq("id", scientist_id) \
         .single() \
@@ -111,7 +111,7 @@ async def update_scientist(
         avatar_url = upload_avatar(avatar)
         updates["avatar_url"] = avatar_url
 
-    result = supabase.table("scientists") \
+    result = supabase.table("scientists2") \
         .update(updates) \
         .eq("id", scientist_id) \
         .execute()
@@ -125,7 +125,7 @@ async def update_scientist(
 @app.delete("/scientists/{scientist_id}")
 def delete_scientist(scientist_id: str):
     # Optional: fetch avatar URL to delete file
-    record = supabase.table("scientists") \
+    record = supabase.table("scientists2") \
         .select("avatar_url") \
         .eq("id", scientist_id) \
         .single() \
@@ -136,7 +136,7 @@ def delete_scientist(scientist_id: str):
         file_name = record.data["avatar_url"].split("/")[-1]
         supabase.storage.from_(BUCKET).remove([file_name])
 
-    result = supabase.table("scientists") \
+    result = supabase.table("scientists2") \
         .delete() \
         .eq("id", scientist_id) \
         .execute()
